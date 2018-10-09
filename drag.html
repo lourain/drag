@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jsPlumb/2.6.8/js/jsplumb.min.js"></script>
+    <title>drag</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        #small {
+            position: absolute;
+            top: 100px;
+            left: 200px;
+            width: 50px;
+            height: 50px;
+            z-index: 99;
+            background-color: coral;
+        }
+
+        .left {
+            /* flex:2; */
+            width: 150px;
+            height: 1000px;
+            background-color: red;
+        }
+
+        #diagramContainer {
+            position: relative;
+            /* flex:5; */
+            width: 1000px;
+            height: 1000px;
+            /* background-color: blue; */
+            border: 1px solid #000;
+        }
+
+        .item {
+            position: absolute;
+            height: 80px;
+            width: 80px;
+            border: 1px solid blue;
+        }
+
+        #item_left {
+            left: 500px;
+            top: 0;
+        }
+
+        #item_right {
+            left: 0;
+            top: 120px;
+        }
+
+        #item_bot {
+            left: 500px;
+            top: 120px;
+        }
+
+        #item_bot2 {
+            left: 800px;
+            top: 120px;
+        }
+
+        #item_bot2_child {
+            position: absolute;
+            top: 250px;
+            right: 10px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+        }
+
+        .render {
+            width: 100px;
+            height: 500px;
+        }
+
+        #item_right_1 {
+            left: 120px;
+            top: 200px;
+        }
+
+        #item_right_2 {
+            left: 120px;
+            top: 300px;
+        }
+
+        #item_right_3 {
+            left: 120px;
+            top: 400px;
+        }
+
+        #item_bot_1 {
+            top: 200px;
+            left: 600px;
+        }
+
+        #item_bot2_1 {
+            top: 200px;
+            left: 1000px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#1">1 </a>
+    <br>
+    <a href="#2">2 </a>
+    <div class="render"></div>
+    <div class="left">
+    <input type="date" name="" id="" value="">
+    </div>
+    <div id="diagramContainer">
+        <div id="item_left" class="item" draggable="true">一级</div>
+
+        <div id="item_right" class="item item2" draggable="true">二级</div>
+        <div id="item_bot" class="item item2" draggable="true">二级</div>
+        <div id="item_bot2" class="item item2" draggable="true">二级</div>
+
+        <div id="item_right_1" class="item item3" draggable="true">r1</div>
+        <div id="item_right_2" class="item item3" draggable="true">r2</div>
+        <div id="item_right_3" class="item item3" draggable="true">r3</div>
+        <div id="item_bot_1" class="item item3" draggable="true">bot1</div>
+        <div id="item_bot2_1" class="item item3" draggable="true">bot2_1</div>
+    </div>
+
+    <script>
+        // $('a').click(function (e) {
+        //     e.preventDefault()
+        //     console.log(this.href)
+        //     // history.pushState(null, null, '/1')
+        //     // console.log(location.pathname);
+        //      $('.render').load('/web/1.html')
+        // })
+        window.onhashchange = function () {
+            var hash = location.hash
+            if (hash == '#1') {
+                console.log('e34')
+                $('.render').load('./web/1.html')
+            } else if (hash == '#2') {
+                $('.render').load('./web/2.html')
+            }
+        }
+        window.onload = function () {
+            var hash = location.hash
+            if (hash == '#1') {
+                console.log('e34')
+                $('.render').load('./web/1.html')
+            } else if (hash == '#2') {
+                $('.render').load('./web/2.html')
+            }
+        }
+
+        /* global jsPlumb */
+        jsPlumb.ready(function () {
+
+            jsPlumb.makeSource($('#item_left'), {
+                // connector: 'StateMachine'
+            });
+            jsPlumb.makeTarget($('#item_right'), {
+                anchor: 'Continuous'
+            });
+
+            jsPlumb.connect({
+                source: 'item_left',
+                target: ['item_bot'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Top'],
+            })
+            var right = jsPlumb.connect({
+                source: 'item_left',
+                target: ['item_right'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Top'],
+            })
+
+            jsPlumb.connect({
+                source: 'item_left',
+                target: ['item_bot2'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Top'],
+            })
+
+            var item_right_1 = jsPlumb.connect({
+                source: 'item_right',
+                target: ['item_right_1'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Left'],
+            })
+            var item_right_2 = jsPlumb.connect({
+                source: 'item_right',
+                target: ['item_right_2'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Left'],
+            })
+            var item_right_3 = jsPlumb.connect({
+                source: 'item_right',
+                target: ['item_right_3'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Left'],
+            })
+            var item_bot_1 = jsPlumb.connect({
+                source: 'item_bot',
+                target: ['item_bot_1'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Left'],
+            })
+            var item_bot2_1 = jsPlumb.connect({
+                source: 'item_bot2',
+                target: ['item_bot2_1'],
+                endpoint: 'Dot',
+                connector: ['Flowchart'],
+                maxConnections: 3,
+                anchor: ['Bottom', 'Left'],
+            })
+            var i = 0;
+            console.log(jsPlumb.getConnections('item_left'));
+            console.log(jsPlumb.getScope(['item_left']));
+            // console.log(jsPlumb.getSelector('#item_left')); 
+            console.log(jsPlumb.getSourceScope($('#item_right')));
+            console.log(jsPlumb.getDefaultScope());
+
+            // console.log([item_right_1.sourceId,item_right_2.sourceId,item_right_3.sourceId,item_bot_1.sourceId,item_bot2_1.sourceId]);
+
+            function addElement() {
+                document.querySelectorAll('.item').forEach(item => {
+                    item.ondragstart = function (e) {
+                        console.log(e.target.id);
+
+                        e.dataTransfer.setData("Text", e.target.id)
+                    }
+                    item.ondragover = function (e) {
+                        e.preventDefault();
+                    }
+                    item.ondrop = function (e) {
+                        e.preventDefault();
+                        i++
+                        console.log(i);
+
+                        var cur_left = parseInt(getComputedStyle(this, null)['left'].substr(0, getComputedStyle(this, null)["left"].length - 2))
+                        var cur_top = parseInt(getComputedStyle(this, null)['top'].substr(0, getComputedStyle(this, null)["top"].length - 2))
+
+                        var data = e.dataTransfer.getData("Text")
+                        var clone = document.getElementById(data).cloneNode(true)
+                        jsPlumb.remove(data)
+                        document.getElementById('diagramContainer').appendChild(clone);
+                        document.getElementById(data).style.cssText = `position:absolute;left:${cur_left + 100}px;top:${cur_top * i + 100}px;`
+                        console.log(document.getElementById(data).style.cssText);
+
+                        jsPlumb.connect({
+                            source: e.target.id,
+                            target: [clone.id],
+                            endpoint: 'Dot',
+                            connector: ['Flowchart'],
+                            maxConnections: 3,
+                            anchor: ['Bottom', 'Left'],
+                        })
+                        jsPlumb.draggable('small')
+                        // jsPlumb.draggable(item)
+                        addElement()
+                    }
+                })
+            }
+            addElement()
+
+
+
+            // jsPlumb.draggable('item_left')
+            // jsPlumb.draggable('item_right')
+            // jsPlumb.draggable('item_bot')
+            // jsPlumb.draggable('item_bot2')
+        })
+    </script>
+</body>
+
+</html>
